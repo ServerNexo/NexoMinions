@@ -1,34 +1,37 @@
 package me.nexo.minions;
 
+import me.nexo.minions.manager.MinionManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class NexoMinions extends JavaPlugin {
 
     private static NexoMinions instance;
+    private MinionManager minionManager;
 
     @Override
     public void onEnable() {
         instance = this;
-        saveDefaultConfig();
 
-        // Inicializamos los managers (Fase 2)
-        // minionManager = new MinionManager(this);
-        // getServer().getPluginManager().registerEvents(new MinionInteractListener(this), this);
+        // Iniciamos el motor de minions
+        minionManager = new MinionManager(this);
 
         getLogger().info("====================================");
-        getLogger().info("🐝 NexoMinions ha sido activado");
-        getLogger().info("Integraciones: Nexo, AuraSkills, Aurora");
+        getLogger().info("🐝 NexoMinions ENGINE Activado");
+        getLogger().info("Integraciones NATIVAS: Nexo, AuraSkills, Aurora");
+        getLogger().info("Arquitectura: ItemDisplay (1.21.11+)");
         getLogger().info("====================================");
     }
 
     @Override
     public void onDisable() {
-        // Aquí guardaremos todos los ItemDisplays (PDC) de forma segura antes de apagar
-        // minionManager.guardarTodosLosMinions();
-        getLogger().info("NexoMinions apagado de forma segura.");
+        getLogger().info("NexoMinions apagado correctamente.");
     }
 
     public static NexoMinions getInstance() {
         return instance;
+    }
+
+    public MinionManager getMinionManager() {
+        return minionManager;
     }
 }
