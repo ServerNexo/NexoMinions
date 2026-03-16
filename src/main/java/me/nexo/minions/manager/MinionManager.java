@@ -6,7 +6,6 @@ import me.nexo.minions.data.MinionKeys;
 import me.nexo.minions.data.MinionType;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.ItemDisplay;
 import org.bukkit.persistence.PersistentDataType;
 
