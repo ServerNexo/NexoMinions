@@ -4,7 +4,6 @@ import com.nexomc.nexo.api.NexoItems;
 import me.nexo.minions.NexoMinions;
 import me.nexo.minions.data.MinionKeys;
 import me.nexo.minions.data.MinionType;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.ItemDisplay;
 import org.bukkit.persistence.PersistentDataType;
@@ -20,10 +19,11 @@ public class MinionManager {
     public MinionManager(NexoMinions plugin) {
         this.plugin = plugin;
         MinionKeys.init(plugin);
-        iniciarTicker();
+        // Ya no iniciamos el ticker aquí.
+        // Tu clase principal (NexoMinions.java) llamará a tickAll() cada segundo de forma más optimizada.
     }
 
-    // Método para crear un minion en el mundo (Podremos llamarlo desde un comando de pruebas)
+    // Método para crear un minion en el mundo (Llamado al colocar el ítem)
     public void spawnMinion(Location loc, UUID ownerId, MinionType type, int tier) {
         loc.getWorld().spawn(loc, ItemDisplay.class, display -> {
             var nexoItemBuilder = NexoItems.itemFromId(type.getNexoModelID());
@@ -42,18 +42,18 @@ public class MinionManager {
         });
     }
 
-    private void iniciarTicker() {
-        // Corre de forma asíncrona para NUNCA dar lag al servidor
-        Bukkit.getScheduler().runTaskTimerAsynchronously(plugin, () -> {
-            long ahora = System.currentTimeMillis();
-            for (ActiveMinion minion : minionsActivos.values()) {
-                if (minion.getEntity().isDead() || !minion.getEntity().isValid()) {
-                    minionsActivos.remove(minion.getEntity().getUniqueId());
-                    continue;
-                }
-                // Si le toca dar un ítem (spawnear item en el mundo), debemos volver al hilo principal
-                Bukkit.getScheduler().runTask(plugin, () -> minion.tick(ahora));
+    // Este método es llamado cada 1 segundo desde NexoMinions.java
+    public void tickAll(long currentTimeMillis) {
+        for (ActiveMinion minion : minionsActivos.values()) {
+
+            // Si la entidad desapareció (alguien la mató o borró), la quitamos de la memoria
+            if (minion.getEntity().isDead() || !minion.getEntity().isValid()) {
+                minionsActivos.remove(minion.getEntity().getUniqueId());
+                continue;
             }
-        }, 1L, 1L);
+
+            // Hacemos que la abeja revise si ya es hora de minar y gire su holograma
+            minion.tick(currentTimeMillis);
+        }
     }
 }

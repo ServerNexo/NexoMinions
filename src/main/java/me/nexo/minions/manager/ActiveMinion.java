@@ -2,8 +2,6 @@ package me.nexo.minions.manager;
 
 import dev.aurelium.auraskills.api.AuraSkillsApi;
 import dev.aurelium.auraskills.api.user.SkillsUser;
-import gg.auroramc.collections.api.AuroraCollectionsProvider;
-import gg.auroramc.collections.collection.CollectionManager;
 import me.nexo.minions.data.MinionKeys;
 import me.nexo.minions.data.MinionTier;
 import me.nexo.minions.data.MinionType;
@@ -17,6 +15,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Transformation;
 import org.joml.AxisAngle4f;
 import org.joml.Vector3f;
+
 
 import java.util.UUID;
 
@@ -60,18 +59,16 @@ public class ActiveMinion {
         Player owner = Bukkit.getPlayer(ownerId);
         if (owner != null && owner.isOnline()) {
 
-            // 🌟 1. HOOK AURORA COLLECTIONS 🌟
-            try {
-                // Tu ruta validada y correcta:
-                CollectionManager api = AuroraCollectionsProvider.getCollectionManager();
+            // 🌟 1. HOOK A TU PROPIO NEXO CORE (Colecciones) 🌟
+            String blockId = type.getTargetMaterial().name().toLowerCase();
 
-                // Si la API se cargó correctamente, incrementamos la colección
-                if (api != null) {
-                    api.incrementCollection(owner, drop);
-                }
-            } catch (Exception e) {
-                // Si Aurora falla, la abeja seguirá funcionando y no crasheará el servidor
-                System.out.println("Error con AuroraCollections en NexoMinions: " + e.getMessage());
+            // Llamamos a la memoria RAM de tu Core para el progreso de este jugador
+            me.tunombre.server.colecciones.CollectionProfile profile =
+                    me.tunombre.server.colecciones.CollectionManager.getProfile(owner.getUniqueId());
+
+            if (profile != null) {
+                // Sumamos 1 bloque a la colección (false = indicamos que no es un slayer)
+                profile.addProgress(blockId, 1, false);
             }
 
             // 🌟 2. HOOK AURA SKILLS 🌟

@@ -48,10 +48,6 @@
             <id>jitpack.io</id>
             <url>https://jitpack.io</url>
         </repository>
-        <repository>
-            <id>auroramc</id>
-            <url>https://repo.auroramc.gg/releases/</url>
-        </repository>
     </repositories>
 
     <dependencies>
@@ -77,11 +73,10 @@
         </dependency>
 
         <dependency>
-            <groupId>gg.auroramc</groupId>
-            <artifactId>AuroraCollections</artifactId>
-            <version>1.0</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/libs/AuroraCollections.jar</systemPath>
+            <groupId>me.tunombre</groupId>
+            <artifactId>NexoCore</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>

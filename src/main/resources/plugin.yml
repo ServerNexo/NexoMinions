@@ -1,0 +1,13 @@
+name: NexoMinions
+version: 1.0-SNAPSHOT
+main: me.nexo.minions.NexoMinions
+api-version: '1.21'
+depend:
+  - Nexo
+  - AuraSkills
+  - NexoCore # ⚠️ OJO: Cambia "Server" por el nombre exacto que le hayas puesto a tu plugin NexoCore en su propio plugin.yml
+commands:
+  minion:
+    description: Comando principal para administrar los abejas mineras.
+    permission: nexominions.admin
+    usage: /minion give <jugador> <tipo> [nivel]
