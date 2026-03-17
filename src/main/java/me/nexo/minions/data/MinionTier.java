@@ -1,35 +1,19 @@
 package me.nexo.minions.data;
 
-public enum MinionTier {
-    TIER_1(1, 15.0), // Nivel 1: Tarda 15 segundos en minar
-    TIER_2(2, 12.0), // Nivel 2: Tarda 12 segundos
-    TIER_3(3, 9.0),  // Nivel 3: Tarda 9 segundos
-    TIER_4(4, 6.0),  // Nivel 4: Tarda 6 segundos
-    TIER_5(5, 3.0);  // Nivel 5 (Máximo): ¡Súper rápido, cada 3 segundos!
+public class MinionTier {
 
-    private final int level;
-    private final double delaySeconds;
-
-    MinionTier(int level, double delaySeconds) {
-        this.level = level;
-        this.delaySeconds = delaySeconds;
+    // Calcula los milisegundos que tarda en picar según el nivel
+    public static long getDelayMillis(int tier) {
+        // Tier 1 = 15.0s | Tier 12 = 6.0s
+        double delaySegundos = 15.0 - ((tier - 1) * (9.0 / 11.0));
+        return (long) (delaySegundos * 1000L);
     }
 
-    public int getLevel() {
-        return level;
-    }
-
-    public double getDelaySeconds() {
-        return delaySeconds;
-    }
-
-    // 🌟 ¡Este es el método mágico que le faltaba a tu código!
-    public static MinionTier getStats(int tierLevel) {
-        for (MinionTier tier : values()) {
-            if (tier.getLevel() == tierLevel) {
-                return tier;
-            }
-        }
-        return TIER_1; // Si por alguna razón no encuentra el nivel, asume que es Nivel 1
+    // Calcula cuántos ítems le caben en la panza (1 slot = 64 ítems)
+    public static int getMaxStorage(int tier) {
+        // Tier 1 = 1 slot | Tier 12 = 15 slots
+        int[] slotsPorNivel = {0, 1, 2, 3, 4, 5, 6, 8, 10, 11, 12, 14, 15};
+        int slots = (tier >= 1 && tier <= 12) ? slotsPorNivel[tier] : 1;
+        return slots * 64;
     }
 }
