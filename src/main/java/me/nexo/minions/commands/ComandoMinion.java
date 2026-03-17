@@ -66,11 +66,18 @@ public class ComandoMinion implements CommandExecutor {
         // 🌟 6. LA MAGIA: Obtener el ítem de Nexo
         var itemBuilder = NexoItems.itemFromId(type.getNexoModelID());
         if (itemBuilder == null) {
-            sender.sendMessage(ChatColor.DARK_RED + "Error Crítico: No existe un ítem en Nexo con la ID '" + type.getNexoModelID() + "'.");
+            sender.sendMessage(ChatColor.DARK_RED + "Error: No existe la ID '" + type.getNexoModelID() + "' en Nexo.");
             return true;
         }
 
         ItemStack minionItem = itemBuilder.build();
+
+        // Verificamos si Nexo nos entregó un ítem fantasma (AIR)
+        if (minionItem == null || minionItem.getType().isAir()) {
+            sender.sendMessage(ChatColor.DARK_RED + "Error: Nexo encontró la ID, pero el material está mal configurado en tu minions.yml (Generó AIR).");
+            return true;
+        }
+
         ItemMeta meta = minionItem.getItemMeta();
 
         // 7. Inyectar datos invisibles (NBT) al ítem
@@ -82,6 +89,9 @@ public class ComandoMinion implements CommandExecutor {
             meta.getPersistentDataContainer().set(keyTier, PersistentDataType.INTEGER, tier);
 
             minionItem.setItemMeta(meta);
+        } else {
+            sender.sendMessage(ChatColor.RED + "Error: El ítem de Nexo no acepta datos NBT. Revisa su material.");
+            return true;
         }
 
         // 8. Entregar el ítem
